@@ -2,5 +2,13 @@
 <RCC version="1.0"/>
     <qresource prefix="/">
         <file>OpenSansSemibold.otf</file>
+		<file>icons/branch.svg</file>
+		<file>icons/division.svg</file>
+		<file>icons/equal.svg</file>
+		<file>icons/minus.svg</file>
+		<file>icons/multi.svg</file>
+		<file>icons/percent.svg</file>
+		<file>icons/plus.svg</file>
+		<file>icons/plus_minus.svg</file>
     </qresource>
 </RCC>

@@ -1,4 +1,4 @@
-import QtQuick 2.15
+import QtQuick 2.6
 import QtQuick.Window
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.0
@@ -7,8 +7,8 @@ import "."
 Window {
     id: window
     visible: true
-    width: 330
-    height: 590
+    width: 360
+    height: 640
     minimumWidth: window.width
     maximumWidth: window.width
     minimumHeight: window.height
@@ -82,9 +82,9 @@ Window {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        height: 168
+        height: 180
         border.width: 0
-        radius: 25
+        radius: 30
         color: "#04BFAD"
 
         Rectangle {
@@ -96,38 +96,42 @@ Window {
 
         Text{
             id: historyText
-            anchors.rightMargin: resultText.anchors.rightMargin
+            anchors.rightMargin: resultText.anchors.rightMargin + 2
             anchors.leftMargin: resultText.anchors.leftMargin
-            anchors.bottomMargin: resultText.anchors.bottomMargin  + (resultText.font.pixelSize - font.pixelSize)* 3.1
+            anchors.bottomMargin: resultText.anchors.topMargin + 83
             horizontalAlignment: resultText.horizontalAlignment
             verticalAlignment: resultText.verticalAlignment
             anchors.fill: parent
-            text: qsTr( "0" )
+            text: qsTr( "" )
             color: resultText.color
-            font.pixelSize: 25
-            font.family: "Open Sans Regular"
+            font.pixelSize: 20
             fontSizeMode: Text.Fit
+            font.letterSpacing: 1
         }
 
         Text {
             id: resultText
-            anchors.rightMargin: 35
-            anchors.leftMargin: 35
-            anchors.bottomMargin: 15
+            anchors.rightMargin: 40
+            anchors.leftMargin: 40
+            anchors.bottomMargin: 10
             anchors.fill: parent
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignBottom
             text: qsTr( "0" )
             color: "white"
-            font.pixelSize: 46
-            font.family: "Open Sans Regular"
+            font.pixelSize: 50
             fontSizeMode: Text.Fit
+            font.letterSpacing: 0.5
+            font.weight: 600
         }
     }
 
     property var currentOperator: ""
 
     function clickDigit(value){
+        if (resultText.text.length === 25)
+            return
+
         var flagBranch = false
         if(resultText.text.endsWith(")")){
             resultText.text = resultText.text.slice(0, -1)
@@ -172,9 +176,10 @@ Window {
         var result = 0,
         textVar1 = historyText.text,
         textVar2 = resultText.text,
-        textCurOperator = currentOperator.text,
+        textCurOperator = "",
         var1 = Number(delBranch(textVar1)),
         var2 = Number(delBranch(textVar2))
+
 
         if (textVar2.endsWith(".)"))
             textVar2 = textVar2.replace(".)", ")")
@@ -200,23 +205,31 @@ Window {
             if (!textVar2.includes("-(-"))
                 textVar2 = String(var2)
 
-            if (currentOperator === operatorDivision)
+            if (currentOperator === operatorDivision){
                 result = var2 ? var1 / var2 : NaN
-            if (currentOperator === operatorMulti)
+                textCurOperator = "÷"
+            }
+            if (currentOperator === operatorMulti){
                 result = var1 * var2
+                textCurOperator = "x"
+            }
             if (currentOperator === operatorMinus){
                 result = var1 - var2
                 textCurOperator = "-"
             }
-            if (currentOperator === operatorPlus)
+            if (currentOperator === operatorPlus){
                 result = var1 + var2
-            if (currentOperator === operatorRemain)
+                textCurOperator = "+"
+            }
+            if (currentOperator === operatorRemain){
                 result = Math.abs(var1 % var2)
+                textCurOperator = "%"
+            }
 
             if (textVar2[0] === "-")
                 textVar2 = "(" + textVar2 + ")"
             resultText.text = result
-            historyText.text += " " + textCurOperator + " " + textVar2
+            historyText.text += textCurOperator + textVar2
 
             currentOperator.onPermHoverColor = false
             currentOperator = ""
@@ -230,21 +243,24 @@ Window {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         columns: 4
-        rowSpacing: 0
-        columnSpacing: 5
-        anchors.leftMargin: 20
-        anchors.rightMargin: 8
-        anchors.bottomMargin: 20
-        anchors.topMargin: 10
+        anchors.leftMargin: 24
+        anchors.rightMargin: 5
+        anchors.bottomMargin: 30
+        anchors.topMargin: 14
 
         /* --------- Первая строка --------- */
         ButtonOperator{
             id: operatorBracket
-            text: "()"
+            Image {
+                id: bracketImage
+                anchors.centerIn: parent
+                source: "/icons/branch.svg"
+            }
 
             MouseArea{
                 id: mouseAreaBracket
                 anchors.fill: parent
+
                 onClicked: {
                     if (!resultText.text)
                         return
@@ -259,7 +275,10 @@ Window {
 
         ButtonOperator{
             id: operatorSign
-            text: "+/-"
+            Image {
+                anchors.centerIn: parent
+                source: "/icons/plus_minus.svg"
+            }
 
             MouseArea{
                 id: mouseAreaSign
@@ -277,7 +296,10 @@ Window {
 
         ButtonOperator{
             id: operatorRemain
-            text: "%"
+            Image {
+                anchors.centerIn: parent
+                source: "/icons/percent.svg"
+            }
 
             MouseArea{
                 id: mouseAreaRemain
@@ -290,7 +312,10 @@ Window {
 
         ButtonOperator{
             id: operatorDivision
-            text: "÷"
+            Image {
+                anchors.centerIn: parent
+                source: "/icons/division.svg"
+            }
 
             MouseArea{
                 id: mouseAreaDivision
@@ -344,7 +369,10 @@ Window {
 
         ButtonOperator{
             id: operatorMulti
-            text: "×"
+            Image {
+                anchors.centerIn: parent
+                source: "/icons/multi.svg"
+            }
 
             MouseArea{
                 id: mouseAreaMulti
@@ -398,7 +426,10 @@ Window {
 
         ButtonOperator{
             id: operatorMinus
-            text: "—"
+            Image {
+                anchors.centerIn: parent
+                source: "/icons/minus.svg"
+            }
 
             MouseArea{
                 id: mouseAreaMinus
@@ -452,7 +483,10 @@ Window {
 
         ButtonOperator{
             id: operatorPlus
-            text: "+"
+            Image {
+                anchors.centerIn: parent
+                source: "/icons/plus.svg"
+            }
 
             MouseArea{
                 id: mouseAreaPlus
@@ -468,7 +502,7 @@ Window {
         ButtonOperator{
             id: operatorClear
             text: "C"
-            backgroundNormalColor: "#F9A5A5"
+            backgroundNormalColor: "#F9AFB0"
             backgroundHoverColor: "#F25E5E"
 
             MouseArea{
@@ -508,7 +542,10 @@ Window {
 
         ButtonOperator{
             id: operatorResult
-            text: "="
+            Image {
+                anchors.centerIn: parent
+                source: "/icons/equal.svg"
+            }
 
             MouseArea{
                 id: mouseAreaResult

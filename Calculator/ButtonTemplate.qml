@@ -26,7 +26,7 @@ Item {
         id: label
         anchors.centerIn: parent
         text: parent.text
-        font.pixelSize: 22
+        font.pixelSize: 24
         color: mouseHandler.hovered || buttonTemplate.onPermHoverColor ? buttonTemplate.textHoverColor : buttonTemplate.textNormalColor
     }
 

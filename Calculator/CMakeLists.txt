@@ -23,6 +23,14 @@ qt_add_resources(appCalculator "app_font"
     PREFIX "/"
     FILES
         OpenSansSemibold.otf
+        icons/branch.svg
+        icons/division.svg
+        icons/equal.svg
+        icons/minus.svg
+        icons/multi.svg
+        icons/percent.svg
+        icons/plus.svg
+        icons/plus_minus.svg
 )
 
 set_target_properties(appCalculator PROPERTIES
